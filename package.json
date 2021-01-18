@@ -4,6 +4,7 @@
     "private": true,
     "homepage": "https://Kateryna-Urbanovych.github.io/goit-react-hw-04-hooks-phonebook",
     "dependencies": {
+        "@reduxjs/toolkit": "^1.5.0",
         "@testing-library/jest-dom": "^5.11.6",
         "@testing-library/react": "^11.2.2",
         "@testing-library/user-event": "^12.2.2",
@@ -13,6 +14,7 @@
         "react-redux": "^7.2.2",
         "react-scripts": "4.0.1",
         "redux": "^4.0.5",
+        "redux-logger": "^3.0.6",
         "redux-persist": "^6.0.0",
         "web-vitals": "^0.2.4"
     },
@@ -46,7 +48,6 @@
         "husky": "^4.3.0",
         "lint-staged": "^10.5.2",
         "prettier": "^2.2.1",
-        "redux-devtools-extension": "^2.13.8",
         "shortid": "^2.2.16"
     }
 }
