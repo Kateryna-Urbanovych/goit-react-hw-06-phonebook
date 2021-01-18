@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import s from './ContactForm.module.css';
+import * as contactsActions from '../../redux/contacts/contacts-actions';
 
-export default function ContactForm({ onSubmit }) {
+function ContactForm({ contacts, onSubmit }) {
     const [name, setName] = useState('');
     const [number, setNumber] = useState('');
 
@@ -25,6 +27,23 @@ export default function ContactForm({ onSubmit }) {
 
     const handleSubmit = event => {
         event.preventDefault();
+
+        const contactsNames = getContactsNames();
+        if (contactsNames.includes(name.toLowerCase())) {
+            alert(`${name} is already in contacts`);
+            return;
+        }
+
+        // 2-ой вариант поиска существующего имени
+        // if (
+        //     contacts.find(
+        //         contact => contact.name.toLowerCase() === name.toLowerCase(),
+        //     )
+        // ) {
+        //     alert(`${name} is already in contacts`);
+        //     return;
+        // }
+
         onSubmit(name, number);
         reset();
     };
@@ -32,6 +51,13 @@ export default function ContactForm({ onSubmit }) {
     const reset = () => {
         setName('');
         setNumber('');
+    };
+
+    const getContactsNames = () => {
+        return contacts.reduce((allNames, { name }) => {
+            allNames.push(name.toLowerCase());
+            return allNames;
+        }, []);
     };
 
     return (
@@ -69,67 +95,17 @@ export default function ContactForm({ onSubmit }) {
     );
 }
 
+const mapStateToProps = state => ({
+    contacts: state.contacts.items,
+});
+
+const mapDispatchToProps = dispatch => ({
+    onSubmit: (name, number) =>
+        dispatch(contactsActions.addContact(name, number)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+
 ContactForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
 };
-
-// OLD CLASS
-// class ContactForm extends Component {
-//     state = {
-//         name: '',
-//         number: '',
-//     };
-
-//     handleChange = event => {
-//         const { name, value } = event.currentTarget;
-//         this.setState({ [name]: value });
-//     };
-
-//     handleSubmit = event => {
-//         event.preventDefault();
-//         this.props.onSubmit(this.state);
-//         this.reset();
-//     };
-
-//     reset = () => {
-//         this.setState({ name: '', number: '' });
-//     };
-
-//     render() {
-//         const { name, number } = this.state;
-
-//         return (
-//             <form onSubmit={this.handleSubmit} className={s.form}>
-//                 <label className={s.label}>
-//                     Name
-//                     <input
-//                         type="text"
-//                         className={s.input}
-//                         name="name"
-//                         value={name}
-//                         onChange={this.handleChange}
-//                         autoComplete="off"
-//                     />
-//                 </label>
-//                 <label className={s.label}>
-//                     Number
-//                     <input
-//                         type="tel"
-//                         className={s.input}
-//                         name="number"
-//                         value={number}
-//                         onChange={this.handleChange}
-//                         autoComplete="off"
-//                     />
-//                 </label>
-//                 <button
-//                     type="submit"
-//                     className={s.button}
-//                     disabled={name === '' || number === ''}
-//                 >
-//                     Add contact
-//                 </button>
-//             </form>
-//         );
-//     }
-// }
