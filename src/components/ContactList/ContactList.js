@@ -1,11 +1,16 @@
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import s from './ContactList.module.css';
+import { getVisibleContacts } from '../../redux/contacts/contacts-selectors';
 import ContactItem from '../ContactItem';
 
-const ContactList = ({ contacts }) => {
+const ContactList = () => {
+    const contacts = useSelector(getVisibleContacts);
+
     return (
         <ul>
+            {/* отображает отсутствие контаков */}
+            {/* {contacts.length === 0 && <p>No contacts</p>} */}
+
             {contacts.map(({ id, name, number }) => (
                 <li key={id} className={s.contactItem}>
                     <ContactItem name={name} number={number} id={id} />
@@ -15,25 +20,4 @@ const ContactList = ({ contacts }) => {
     );
 };
 
-const getVisibleContacts = (contacts, filter) => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(({ name }) =>
-        name.toLowerCase().includes(normalizedFilter),
-    );
-};
-
-const mapStateToProps = ({ contacts: { items, filter } }) => ({
-    contacts: getVisibleContacts(items, filter),
-});
-
-export default connect(mapStateToProps, null)(ContactList);
-
-ContactList.propTypes = {
-    contacts: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
-            number: PropTypes.string.isRequired,
-        }),
-    ),
-};
+export default ContactList;
